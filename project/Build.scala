@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright 2012-2013 WorldWide Conferencing, LLC
+=======
+ * Copyright 2012-2014 WorldWide Conferencing, LLC
+>>>>>>> 87014c3... Added scala-xml a dependency starting with scala 2.11.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +43,12 @@ object BuildDef extends Build {
   lazy val common =
     coreProject("common")
       .settings(description := "Common Libraties and Utilities",
-                libraryDependencies ++= Seq(slf4j_api, logback, slf4j_log4j12))
+                libraryDependencies ++= Seq(slf4j_api, logback, slf4j_log4j12),
+                libraryDependencies <++= scalaVersion {
+                  case "2.11.0" => Seq(scala_xml)
+                  case _ => Seq()
+                }
+      )
 
   lazy val actor =
     coreProject("actor")

@@ -50,6 +50,7 @@ object Dependencies {
   lazy val slf4j_api              = "org.slf4j"                  % "slf4j-api"          % slf4jVersion
   lazy val squeryl                = "org.squeryl"                % "squeryl"            % "0.9.5-6" cross CVMapping210
   lazy val rhino                  = "org.mozilla"                      % "rhino"                 % "1.7R4"
+  lazy val scala_xml              = "org.scala-lang.modules"     %% "scala-xml"         % "1.0.1"
 
   // Aliases
   lazy val mongo_driver = mongo_java_driver
