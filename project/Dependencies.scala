@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2013 WorldWide Conferencing, LLC
+ * Copyright 2011 WorldWide Conferencing, LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@ object Dependencies {
 
   lazy val slf4jVersion = "1.7.2"
 
-  lazy val scalazGroup       = defaultOrMapped("org.scalaz")
-  lazy val scalazVersion     = defaultOrMapped("6.0.4")
+  lazy val scalazGroup        = defaultOrMapped("org.scalaz")
+  lazy val scalazVersion      = defaultOrMapped("6.0.4")
   lazy val scalaz7Version     = defaultOrMapped("7.0.0",  "2.11.0" -> "7.0.6")
   lazy val specs2Version      = defaultOrMapped("1.12.3", "2.11.0" -> "2.3.11")
   lazy val scalatestVersion   = defaultOrMapped("1.9.1",  "2.11.0" -> "2.1.3")
@@ -80,7 +80,6 @@ object Dependencies {
   lazy val h2 = h2database
 
 
-
   // Test scope:
   // Scope available only in test classpath, non-transitive by default.
   // TODO: See if something alternative with lesser footprint can be used instead of mega heavy apacheds
@@ -91,5 +90,6 @@ object Dependencies {
   lazy val scalacheck  = "org.scalacheck"             %% "scalacheck"               % "1.10.0"     % "test"
   lazy val specs2: ModuleMap =
                          "org.specs2"                 %% "specs2"                   % defaultOrMapped("1.12.3")(_) % "test"
+  lazy val junit       = "junit"                       % "junit"                    % "4.8.2" 
 
 }
