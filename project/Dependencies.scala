@@ -29,7 +29,10 @@ object Dependencies {
 
   lazy val scalazGroup       = defaultOrMapped("org.scalaz")
   lazy val scalazVersion     = defaultOrMapped("6.0.4")
-  lazy val scalaz7Version    = defaultOrMapped("7.0.0")
+  lazy val scalaz7Version     = defaultOrMapped("7.0.0",  "2.11.0" -> "7.0.6")
+  lazy val specs2Version      = defaultOrMapped("1.12.3", "2.11.0" -> "2.3.11")
+  lazy val scalatestVersion   = defaultOrMapped("1.9.1",  "2.11.0" -> "2.1.3")
+  lazy val scalaParserVersion = defaultOrMapped("2.11.0-20130906.012530-56")
 
   // Compile scope:
   // Scope available in all classpath, transitive by default.
@@ -42,7 +45,7 @@ object Dependencies {
   lazy val htmlparser             = "nu.validator.htmlparser"    % "htmlparser"         % "1.4"
   lazy val mongo_java_driver      = "org.mongodb"                % "mongo-java-driver"  % "2.11.4"
   lazy val paranamer              = "com.thoughtworks.paranamer" % "paranamer"          % "2.4.1"
-  lazy val scalajpa               = "org.scala-libs"             % "scalajpa"           % "1.4"
+  lazy val scalajpa               = "org.scala-libs"             % "scalajpa"           % "1.5"     cross CVMapping210
   lazy val scalap: ModuleMap      = "org.scala-lang"             % "scalap"             % _
   lazy val scala_compiler: ModuleMap = "org.scala-lang"          % "scala-compiler"     % _
   lazy val scalaz_core: ModuleMap = sv => scalazGroup(sv)        % "scalaz-core"        % scalazVersion(sv) cross CVMapping210
@@ -51,6 +54,7 @@ object Dependencies {
   lazy val squeryl                = "org.squeryl"                % "squeryl"            % "0.9.5-6" cross CVMapping210
   lazy val rhino                  = "org.mozilla"                      % "rhino"                 % "1.7R4"
   lazy val scala_xml              = "org.scala-lang.modules"     %% "scala-xml"         % "1.0.1"
+  lazy val scala_parser           = "org.scala-lang"      % "scala-parser-combinators" % "2.11.0-M4"
 
   // Aliases
   lazy val mongo_driver = mongo_java_driver
