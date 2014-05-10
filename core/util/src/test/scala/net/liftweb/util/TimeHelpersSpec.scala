@@ -89,14 +89,10 @@ object TimeHelpersSpec extends Specification with ScalaCheck with TimeAmountsGen
       3.seconds - 4.seconds must_== (-1).seconds
     }
     "have a later method returning a date relative to now plus the time span" in {
-      val expectedTime = new Date().getTime + 3.seconds.millis
-
-      3.seconds.later.getTime must beCloseTo(expectedTime, 700L)
+      3.seconds.later.getTime must beCloseTo(new Date().getTime + 3.seconds.millis, 1000L)
     }
     "have an ago method returning a date relative to now minus the time span" in {
-      val expectedTime = new Date().getTime - 3.seconds.millis
-
-      3.seconds.ago.getTime must beCloseTo(expectedTime, 500L)
+      3.seconds.ago.getTime must beCloseTo(new Date().getTime - 3.seconds.millis, 1000L)
     }
     "have a toString method returning the relevant number of weeks, days, hours, minutes, seconds, millis" in {
       val conversionIsOk = forAll(timeAmounts)((t: TimeAmounts) => { val (timeSpanToString, timeSpanAmounts) = t
@@ -132,7 +128,7 @@ object TimeHelpersSpec extends Specification with ScalaCheck with TimeAmountsGen
       weeks(3) must_== 3 * 7 * 24 * 60 * 60 * 1000
     }
     "provide a noTime function on Date objects to transform a date into a date at the same day but at 00:00" in {
-      hourFormat(now.noTime) must_== "00:00:00"
+      hourFormat(timeNow.noTime) must_== "00:00:00"
     }
 
     "make sure noTime does not change the day" in {
@@ -196,11 +192,7 @@ object TimeHelpersSpec extends Specification with ScalaCheck with TimeAmountsGen
       val d = now
       List(null, Nil, None, Failure("", Empty, Empty)) forall { toDate(_) must_== Empty }
       List(Full(d), Some(d), List(d)) forall { toDate(_) must_== Full(d) }
-
-      toDate(internetDateFormatter.format(d)) must beLike {
-        case Full(converted) =>
-          converted.getTime.toLong must beCloseTo(d.getTime.toLong, 1000L)
-      }
+      toDate(internetDateFormatter.format(d)).get.getTime.toLong must beCloseTo(d.getTime.toLong, 1000L)
     }
   }
 
