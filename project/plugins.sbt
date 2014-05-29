@@ -1,7 +1,8 @@
-DefaultOptions.addPluginResolvers
+lazy val plugins = (project in file("."))
+  .dependsOn(buildPlugin, yuiCompressorPlugin)
 
-addSbtPlugin("in.drajit.sbt" % "sbt-yui-compressor" % "0.2.1")
+addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.6.0")
 
-resolvers += "sbt-idea-repo" at "http://mpeltonen.github.com/maven/"
+lazy val buildPlugin = uri("git://github.com/lift/sbt-lift-build.git#724fb133be")
 
-addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.1.0")
+lazy val yuiCompressorPlugin = uri("git://github.com/indrajitr/sbt-yui-compressor.git#89304ec0c9")

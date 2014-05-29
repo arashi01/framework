@@ -1,9 +1,5 @@
 /*
-<<<<<<< HEAD
- * Copyright 2012-2013 WorldWide Conferencing, LLC
-=======
  * Copyright 2012-2014 WorldWide Conferencing, LLC
->>>>>>> 87014c3... Added scala-xml a dependency starting with scala 2.11.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,16 +34,13 @@ object BuildDef extends Build {
   // Core Projects
   // -------------
   lazy val core: Seq[ProjectReference] =
-    Seq(common, actor, markdown, json, json_scalaz7, json_ext, util, json_scalaz)
+    Seq(common, actor, markdown, json, json_scalaz7, json_ext, util)
 
   lazy val common =
     coreProject("common")
       .settings(description := "Common Libraties and Utilities",
                 libraryDependencies ++= Seq(slf4j_api, logback, slf4j_log4j12),
-                libraryDependencies <++= scalaVersion {
-                  case "2.11.0" => Seq(scala_xml, scala_parser)
-                  case _ => Seq()
-                }
+                addDependentDeps(_ >= 11, scala_xml, scala_parser)
       )
 
   lazy val actor =
@@ -60,15 +53,8 @@ object BuildDef extends Build {
     coreProject("markdown")
         .settings(description := "Markdown Parser",
                   parallelExecution in Test := false,
-                  libraryDependencies ++= Seq(
-                     "org.scalatest" %% "scalatest" % "1.9.1" % "test",
-                     "junit" % "junit" % "4.8.2" % "test",
-                    libraryDependencies <++= scalaVersion { sv => Seq(scalatest(sv), junit) },
-                    libraryDependencies <++= scalaVersion {
-                      case "2.11.0" => Seq(scala_xml, scala_parser)
-                      case _ => Seq()
-                    }
-                   )
+                    libraryDependencies ++= Seq(junit, scalatest),
+                    addDependentDeps(_ >= 11, scala_xml, scala_parser)
       )
 
   lazy val json =
@@ -77,17 +63,11 @@ object BuildDef extends Build {
                   parallelExecution in Test := false,
                   libraryDependencies <++= scalaVersion { sv => Seq(scalap(sv), paranamer) })
 
-  lazy val json_scalaz =
-    coreProject("json-scalaz")
-        .dependsOn(json)
-        .settings(description := "JSON Library based on Scalaz 6",
-                  libraryDependencies <+= scalaVersion(scalaz))
-
   lazy val json_scalaz7 =
     coreProject("json-scalaz7")
         .dependsOn(json)
         .settings(description := "JSON Library based on Scalaz 7",
-                  libraryDependencies <+= scalaVersion(scalaz7))
+                  libraryDependencies += scalaz7)
 
   lazy val json_ext =
     coreProject("json-ext")
@@ -122,7 +102,7 @@ object BuildDef extends Build {
         .settings(description := "Webkit Library",
                   parallelExecution in Test := false,
                   libraryDependencies <++= scalaVersion { sv =>
-                    Seq(commons_fileupload, rhino, servlet_api, specs2(sv).copy(configurations = Some("provided")), jetty6,
+                    Seq(commons_fileupload, rhino, servlet_api, specs2.copy(configurations = Some("provided")), jetty6,
                       jwebunit)
                   },
                   initialize in Test <<= (sourceDirectory in Test) { src =>
@@ -134,7 +114,7 @@ object BuildDef extends Build {
   // Persistence Projects
   // --------------------
   lazy val persistence: Seq[ProjectReference] =
-    Seq(db, proto, mapper, record, squeryl_record, mongodb, mongodb_record)
+    Seq(db, proto, mapper, record,  mongodb, mongodb_record) // TODO Reenable squeryl_record when 2.11 binary available
 
   lazy val db =
     persistenceProject("db")
@@ -198,4 +178,21 @@ object BuildDef extends Build {
 
   def liftProject(id: String, base: File): Project =
     Project(id, base).settings(liftBuildSettings: _*).settings(scalacOptions ++= List("-feature", "-language:implicitConversions"))
+
+  /** Convenience method for adding library dependencies which are dependent on the major scala version built against.
+    *
+   * Starting with Scala 2.11 an effort to modularise the standard library means that a number of packages have been
+    * removed and placed in external modules. This method reduces the boilerplace for their inclusion.
+   *
+   * @param forMajor  function representing scala major version => Boolean. If evaluation if true, then dependencies
+    *                  will be appended, else dependencies will be unchanged.
+   * @param modules   the dependencies to be added
+   */
+  def addDependentDeps(forMajor: Int => Boolean, modules: ModuleID*) = libraryDependencies := {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, scalaMajor)) if forMajor(scalaMajor) =>
+        libraryDependencies.value ++ modules
+      case _ => libraryDependencies.value
+    }
+  }
 }
