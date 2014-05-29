@@ -19,8 +19,7 @@ package net.liftweb.markdown
  * Christoph Henkelmann http://henkelmann.eu/
  */
 
-import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.FlatSpec
+import org.scalatest.{Matchers, FlatSpecLike}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
@@ -28,7 +27,7 @@ import org.scalatest.junit.JUnitRunner
  * Tests the Line Tokenizer that prepares input for parsing.
  */
 @RunWith(classOf[JUnitRunner])
-class LineTokenizerTest extends LineTokenizer with FlatSpec with ShouldMatchers {
+class LineTokenizerTest extends LineTokenizer with FlatSpecLike with Matchers {
 
     "The LineTokenizer" should "split input lines correctly" in {
         splitLines("line1\nline2\n") should equal (List("line1", "line2"))

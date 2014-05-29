@@ -57,7 +57,6 @@ object VCardParserSpec extends Specification with XmlMatchers {
               VCardEntry(VCardKey("TEL", List(("HOME", ""), ("VOICE", ""))), List("(404) 555-1212")),
               VCardEntry(VCardKey("END", List()), List("VCARD")))
         }
-        case Right(r) => failure(r toString)
       }
 
     }

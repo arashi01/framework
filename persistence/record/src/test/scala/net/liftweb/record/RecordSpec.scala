@@ -24,7 +24,7 @@ import org.specs2.specification.Fragment
 import org.joda.time._
 
 import http.js.JE._
-import common._
+import net.liftweb.common.{Full, Empty}
 import http.{S, LiftSession}
 import json._
 import util._
@@ -334,14 +334,8 @@ object RecordSpec extends Specification  {
       "get set from json string using lift-json parser" in {
         S.initIfUninitted(new LiftSession("", randomString(20), Empty)) {
           val fttrFromJson = FieldTypeTestRecord.fromJsonString(fttrJson)
-          fttrFromJson must_== Full(fttr)
-        }
-      }
-
-      "get set from json string using util.JSONParser" in {
-        S.initIfUninitted(new LiftSession("", randomString(20), Empty)) {
-          val fttrFromJSON = FieldTypeTestRecord.fromJSON(fttrJson)
-          fttrFromJSON must_== Full(fttr)
+          fttrFromJson.isDefined must_== true
+          fttrFromJson  must_== Full(fttr)
         }
       }
     }
@@ -349,7 +343,7 @@ object RecordSpec extends Specification  {
 
   "basic record" should {
     "order fields according to fieldOrder" in {
-      BasicTestRecord.metaFields must_==  List(BasicTestRecord.field2, BasicTestRecord.field1, BasicTestRecord.field3)
+      BasicTestRecord.metaFields must_==  List(BasicTestRecord.field2, BasicTestRecord.field1, BasicTestRecord.fieldThree)
     }
   }
 }
